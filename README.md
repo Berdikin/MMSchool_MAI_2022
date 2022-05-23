@@ -15,3 +15,4 @@
 ## Стек технологий
 Unity, C#, Blender, Dotnet-SDK, Android-SDK, Oculus Quest
 
+База знаний: ![Логотип](https://docs.google.com/document/d/1-nlvzS-FvCzF5lr1p7ujiO-eCYWqOBoKmkG0vmcTi7w/edit#)

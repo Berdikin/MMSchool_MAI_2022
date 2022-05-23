@@ -12,13 +12,15 @@ public class FooPacket
     public string StringValue { get; set; }
 }
 
-public class Client : MonoBehaviour {
+public class Client : MonoBehaviour
+{
     EventBasedNetListener netListener;
     NetPacketProcessor netPacketProcessor;
     NetManager netManager;
 
 
-    void Start() {
+    void Start()
+    {
         netListener = new EventBasedNetListener();
         netPacketProcessor = new NetPacketProcessor();
 
@@ -27,9 +29,11 @@ public class Client : MonoBehaviour {
             Debug.LogError($"Connected to server: {server}");
         };
 
+        //запускается когда приходит сообщение (от кого пришло, для чтения, как отправленно)
         netListener.NetworkReceiveEvent += (server, reader, deliveryMethod) =>
         {
             netPacketProcessor.ReadAllPackets(reader, server);
+            netPacketProcessor.Send(server, new FooPacket() { NumberValue = 2, StringValue = "TEST to server" }, DeliveryMethod.ReliableOrdered);
         };
 
         netPacketProcessor.SubscribeReusable<FooPacket>((packet) =>
@@ -44,7 +48,8 @@ public class Client : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         netManager.PollEvents();
     }

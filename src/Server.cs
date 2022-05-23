@@ -23,7 +23,7 @@ public static class Programm
         };
 
         netListener.NetworkReceiveEvent += (client, reader, deliveryMethod) => {
-            netPacketProcessor.ReadAllPackets(reader, client);
+            netProcessor.ReadAllPackets(reader, client);
         };
 
         netListener.PeerConnectedEvent += client =>

@@ -1,38 +1,41 @@
-﻿using LiteNetLib;
+using LiteNetLib;
 using LiteNetLib.Utils;
 
+public class FooPacket{
+    public int NumberValue { get; set; }
+    public string StringValue { get; set; }
+}
 
 public static class Programm
 {
     public static void Main(string[] args)
     {
-        EventBasedNetListener listener = new EventBasedNetListener();
-        NetManager server = new NetManager(listener);
-        server.Start(9050 /* port */);
+        NetPacketProcessor netProcessor = new NetPacketProcessor();
 
-        listener.ConnectionRequestEvent += request =>
+        EventBasedNetListener netListener = new EventBasedNetListener();
+        NetManager netManager = new NetManager(netListener);
+        netManager.Start(6431 /* port */);
+
+        netListener.ConnectionRequestEvent += request =>
         {
-            if(server.ConnectedPeersCount < 10 /* max connections */)
-                request.AcceptIfKey("SomeConnectionKey");
-            else
-                request.Reject();
+           request.Accept();
         };
 
-        listener.PeerConnectedEvent += peer =>
+        netListener.PeerConnectedEvent += client =>
         {
-            Console.WriteLine("We got connection: {0}", peer.EndPoint); // Show peer ip
-            NetDataWriter writer = new NetDataWriter();                 // Create writer class
-            writer.Put("Hello client!");                                // Put some string
-            peer.Send(writer, DeliveryMethod.ReliableOrdered);             // Send with reliability
+
+            Console.WriteLine("We got connection: {0}", client.EndPoint); // Show peer ip
+            netProcessor.Send(client, new FooPacket(){NumberValue = 1, StringValue = "TEST"}, DeliveryMethod.ReliableOrdered);
         };
+
         Console.WriteLine("Server Started!");
         var stop = false;
         Console.CancelKeyPress += (a, b) => stop = true;
         while (!stop)
         {
-            server.PollEvents();
+            netManager.PollEvents();
             Thread.Sleep(15);
         }
-        server.Stop();
+        netManager.Stop();
     }
 }

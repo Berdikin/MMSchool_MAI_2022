@@ -1,29 +1,51 @@
 // Client.cs
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LiteNetLib;
+using LiteNetLib.Utils;
+
+public class FooPacket
+{
+    public int NumberValue { get; set; }
+    public string StringValue { get; set; }
+}
 
 public class Client : MonoBehaviour {
+    EventBasedNetListener netListener;
+    NetPacketProcessor netPacketProcessor;
     NetManager netManager;
-    // Start is called before the first frame update
+
+
     void Start() {
-        EventBasedNetListener netListener = new EventBasedNetListener();
-        netManager = new NetManager(netListener);
-        netManager.Start();
-        netListener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
+        netListener = new EventBasedNetListener();
+        netPacketProcessor = new NetPacketProcessor();
+
+        netListener.PeerConnectedEvent += (server) =>
         {
-            Debug.Log("Received");
-            //GameObject MyGameObject = new GameObject(dataReader.GetString(100));
-            Debug.LogFormat("We got:{0}", dataReader.GetString(100));
-            dataReader.Recycle();
+            Debug.LogError($"Connected to server: {server}");
         };
 
+        netListener.NetworkReceiveEvent += (server, reader, deliveryMethod) =>
+        {
+            netPacketProcessor.ReadAllPackets(reader, server);
+        };
+
+        netPacketProcessor.SubscribeReusable<FooPacket>((packet) =>
+        {
+            Debug.Log("Got a foo packet!");
+            Debug.Log(packet.NumberValue);
+        });
+
+        netManager = new NetManager(netListener);
+        netManager.Start();
         netManager.Connect("192.168.168.171", 6431, "");
     }
 
     // Update is called once per frame
     void Update() {
+
         netManager.PollEvents();
     }
 }

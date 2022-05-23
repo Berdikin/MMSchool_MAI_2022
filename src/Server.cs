@@ -1,7 +1,8 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-public class FooPacket{
+public class FooPacket
+{
     public int NumberValue { get; set; }
     public string StringValue { get; set; }
 }
@@ -14,19 +15,29 @@ public static class Programm
 
         EventBasedNetListener netListener = new EventBasedNetListener();
         NetManager netManager = new NetManager(netListener);
-        netManager.Start(6431 /* port */);
+        netManager.Start(6431);
 
         netListener.ConnectionRequestEvent += request =>
         {
-           request.Accept();
+            request.Accept();
+        };
+
+        netListener.NetworkReceiveEvent += (client, reader, deliveryMethod) => {
+            netProcessor.ReadAllPackets(reader, client);
         };
 
         netListener.PeerConnectedEvent += client =>
         {
 
             Console.WriteLine("We got connection: {0}", client.EndPoint); // Show peer ip
-            netProcessor.Send(client, new FooPacket(){NumberValue = 1, StringValue = "TEST"}, DeliveryMethod.ReliableOrdered);
+            netProcessor.Send(client, new FooPacket() { NumberValue = 1, StringValue = "TEST to client" }, DeliveryMethod.ReliableOrdered);
         };
+
+        netProcessor.SubscribeReusable<FooPacket>((packet) =>
+        {
+            Console.WriteLine("Got a packet from client!");
+            Console.WriteLine(packet.NumberValue);
+        });
 
         Console.WriteLine("Server Started!");
         var stop = false;

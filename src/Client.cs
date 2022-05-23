@@ -29,17 +29,17 @@ public class Client : MonoBehaviour
             Debug.LogError($"Connected to server: {server}");
         };
 
-        //çàïóñêàåòñÿ êîãäà ïðèõîäèò ñîîáùåíèå (îò êîãî ïðèøëî, äëÿ ÷òåíèÿ, êàê îòïðàâëåííî)
+        //Ã§Ã Ã¯Ã³Ã±ÃªÃ Ã¥Ã²Ã±Ã¿ ÃªÃ®Ã£Ã¤Ã  Ã¯Ã°Ã¨ÃµÃ®Ã¤Ã¨Ã² Ã±Ã®Ã®Ã¡Ã¹Ã¥Ã­Ã¨Ã¥ (Ã®Ã² ÃªÃ®Ã£Ã® Ã¯Ã°Ã¨Ã¸Ã«Ã®, Ã¤Ã«Ã¿ Ã·Ã²Ã¥Ã­Ã¨Ã¿, ÃªÃ Ãª Ã®Ã²Ã¯Ã°Ã Ã¢Ã«Ã¥Ã­Ã­Ã®)
         netListener.NetworkReceiveEvent += (server, reader, deliveryMethod) =>
         {
+            netPacketProcessor.Send(server, new FooPacket() { NumberValue = 2, StringValue = "From client" }, DeliveryMethod.ReliableOrdered);
             netPacketProcessor.ReadAllPackets(reader, server);
-            netPacketProcessor.Send(server, new FooPacket() { NumberValue = 2, StringValue = "TEST to server" }, DeliveryMethod.ReliableOrdered);
         };
 
         netPacketProcessor.SubscribeReusable<FooPacket>((packet) =>
         {
-            Debug.Log("Got a foo packet!");
-            Debug.Log(packet.NumberValue);
+            Debug.Log("Got a packet!");
+            Debug.Log(packet.StringValue);
         });
 
         netManager = new NetManager(netListener);
@@ -50,7 +50,6 @@ public class Client : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         netManager.PollEvents();
     }
 }

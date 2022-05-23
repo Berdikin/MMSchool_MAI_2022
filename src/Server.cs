@@ -23,20 +23,23 @@ public static class Programm
         };
 
         netListener.NetworkReceiveEvent += (client, reader, deliveryMethod) => {
-            netProcessor.ReadAllPackets(reader, client);
+            netPacketProcessor.ReadAllPackets(reader, client);
         };
 
         netListener.PeerConnectedEvent += client =>
         {
-
             Console.WriteLine("We got connection: {0}", client.EndPoint); // Show peer ip
-            netProcessor.Send(client, new FooPacket() { NumberValue = 1, StringValue = "TEST to client" }, DeliveryMethod.ReliableOrdered);
+            netProcessor.Send(client, new FooPacket() { NumberValue = 1, StringValue = "From server" }, DeliveryMethod.ReliableOrdered);
         };
 
         netProcessor.SubscribeReusable<FooPacket>((packet) =>
         {
             Console.WriteLine("Got a packet from client!");
-            Console.WriteLine(packet.NumberValue);
+            Console.WriteLine(packet.StringValue);
+            if (packet.NumberValue == 2)
+            {
+                netManager.SendToAll(netProcessor.Write(new FooPacket() { NumberValue = packet.NumberValue, StringValue = "From client to client" }), DeliveryMethod.ReliableOrdered);
+            }
         });
 
         Console.WriteLine("Server Started!");

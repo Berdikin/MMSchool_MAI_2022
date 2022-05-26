@@ -12,20 +12,22 @@ public class Stand : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        if (other.tag == "Wing")
+        if (collision.gameObject == wing)
         {
-            Debug.LogError("Произошло соединение");
-            float xpos = 1.41;
-            float ypos = 0.12;
-            float zpos = 0;
+            Debug.LogError("ГЏГ°Г®ГЁГ§Г®ГёГ«Г® Г±Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГҐ");
+            float xpos = 1.41f;
+            float ypos = 0.12f;
+            float zpos = 0f;
             Vector3 wingPos = new Vector3(xpos, ypos, zpos);
             wing.transform.position = wingPos;
-            float xrot = -90;
-            float yrot = 0;
-            float zrot = 0;
+            float xrot = -90f;
+            float yrot = 0f;
+            float zrot = 0f;
             wing.transform.eulerAngles = new Vector3(xrot, yrot, zrot);
+            wing.GetComponent<isKinematic>() = true;
+            wing.GetComponent<detectCollisions>() = false;
         }
     }
 
@@ -34,4 +36,3 @@ public class Stand : MonoBehaviour
        
     }
 }
-

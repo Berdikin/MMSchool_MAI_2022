@@ -6,14 +6,18 @@ using UnityEngine;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-public class FooPacket
+public class PacketAboutObject
 {
-    public int NumberValue { get; set; }
-    public string StringValue { get; set; }
+    public float XCoordinate { get; set; }
+    public float YCoordinate { get; set; }
+    public float ZCoordinate { get; set; }
+    public string NameOfObject { get; set; }
 }
 
 public class Client : MonoBehaviour
 {
+    public GameObject ball;
+
     EventBasedNetListener netListener;
     NetPacketProcessor netPacketProcessor;
     NetManager netManager;
@@ -27,19 +31,22 @@ public class Client : MonoBehaviour
         netListener.PeerConnectedEvent += (server) =>
         {
             Debug.LogError($"Connected to server: {server}");
+            netPacketProcessor.Send(server, new PacketAboutObject()
+            { XCoordinate = ball.transform.position.x, YCoordinate = ball.transform.position.y, ZCoordinate = ball.transform.position.z, NameOfObject = "Ball" }, DeliveryMethod.ReliableOrdered);
         };
 
-        //çàïóñêàåòñÿ êîãäà ïðèõîäèò ñîîáùåíèå (îò êîãî ïðèøëî, äëÿ ÷òåíèÿ, êàê îòïðàâëåííî)
         netListener.NetworkReceiveEvent += (server, reader, deliveryMethod) =>
         {
-            netPacketProcessor.Send(server, new FooPacket() { NumberValue = 2, StringValue = "From client" }, DeliveryMethod.ReliableOrdered);
+            netPacketProcessor.Send(server, new PacketAboutObject() 
+            { XCoordinate = ball.transform.position.x, YCoordinate = ball.transform.position.y, ZCoordinate= ball.transform.position.z, NameOfObject = "Ball" }, DeliveryMethod.ReliableOrdered);
             netPacketProcessor.ReadAllPackets(reader, server);
         };
 
-        netPacketProcessor.SubscribeReusable<FooPacket>((packet) =>
+        netPacketProcessor.SubscribeReusable<PacketAboutObject>((packet) =>
         {
-            Debug.Log("Got a packet!");
-            Debug.Log(packet.StringValue);
+            Debug.LogFormat($"Object {packet.NameOfObject} now has a position: {packet.XCoordinate}, {packet.YCoordinate}, {packet.ZCoordinate}");
+            myVector = new Vector3(packet.XCoordinate, packet.YCoordinate, packet.ZCoordinate);
+            ball.transform.position = myVector;
         });
 
         netManager = new NetManager(netListener);
@@ -47,7 +54,6 @@ public class Client : MonoBehaviour
         netManager.Connect("192.168.168.171", 6431, "");
     }
 
-    // Update is called once per frame
     void Update()
     {
         netManager.PollEvents();

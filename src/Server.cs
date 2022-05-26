@@ -1,10 +1,12 @@
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-public class FooPacket
+public class PacketAboutObject
 {
-    public int NumberValue { get; set; }
-    public string StringValue { get; set; }
+    public float XCoordinate { get; set; }
+    public float YCoordinate { get; set; }
+    public float ZCoordinate { get; set; }
+    public string NameOfObject { get; set; }
 }
 
 public static class Programm
@@ -29,17 +31,14 @@ public static class Programm
         netListener.PeerConnectedEvent += client =>
         {
             Console.WriteLine("We got connection: {0}", client.EndPoint); // Show peer ip
-            netProcessor.Send(client, new FooPacket() { NumberValue = 1, StringValue = "From server" }, DeliveryMethod.ReliableOrdered);
         };
 
-        netProcessor.SubscribeReusable<FooPacket>((packet) =>
+        netProcessor.SubscribeReusable<PacketAboutObject>((packet) =>
         {
             Console.WriteLine("Got a packet from client!");
-            Console.WriteLine(packet.StringValue);
-            if (packet.NumberValue == 2)
-            {
-                netManager.SendToAll(netProcessor.Write(new FooPacket() { NumberValue = packet.NumberValue, StringValue = "From client to client" }), DeliveryMethod.ReliableOrdered);
-            }
+            Console.WriteLine("Object {0} now have a position: {1}, {2}, {3}", packet.NameOfObject, packet.XCoordinate, packet.YCoordinate, packet.ZCoordinate);
+            netManager.SendToAll(netProcessor.Write(new PacketAboutObject() 
+            { XCoordinate = packet.XCoordinate , YCoordinate = packet.YCoordinate , ZCoordinate = packet.ZCoordinate , NameOfObject = packet.NameOfObject }), DeliveryMethod.ReliableOrdered);
         });
 
         Console.WriteLine("Server Started!");
@@ -48,7 +47,7 @@ public static class Programm
         while (!stop)
         {
             netManager.PollEvents();
-            Thread.Sleep(15);
+            Thread.Sleep(500);
         }
         netManager.Stop();
     }

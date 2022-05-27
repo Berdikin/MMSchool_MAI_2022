@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 using System.Text.RegularExpressions;
@@ -9,7 +9,7 @@ public class Stand : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -34,7 +34,6 @@ public class Stand : MonoBehaviour
 
     void Update()
     {
-       
+
     }
 }
-

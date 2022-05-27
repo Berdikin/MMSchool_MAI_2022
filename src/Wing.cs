@@ -9,11 +9,10 @@ public class Wing : MonoBehaviour
 
     void Start()
     {
-        onStand=false;
+        onStand = false;
     }
 
     void Update()
-    {  
+    {
     }
 }
-

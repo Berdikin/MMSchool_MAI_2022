@@ -6,7 +6,7 @@ public class PacketAboutObject
     public float XCoordinate { get; set; }
     public float YCoordinate { get; set; }
     public float ZCoordinate { get; set; }
-    public string NameOfObject { get; set; }
+    public bool onStand { get; set; }
 }
 
 public static class Programm
@@ -38,16 +38,19 @@ public static class Programm
         netProcessor.SubscribeReusable<PacketAboutObject>((packet) =>
         {
             Console.WriteLine("Got a packet from client!");
-            
-            //Console.WriteLine("Object {0} now have a position: {1}, {2}, {3}", packet.NameOfObject, packet.XCoordinate, packet.YCoordinate, packet.ZCoordinate);
-            foreach (NetPeer c in netManager.ConnectedPeerList) 
+            foreach (NetPeer c in netManager.ConnectedPeerList)
             {
-                if(c != first)
+                if (c != first)
                 {
                     netProcessor.Send(c, new PacketAboutObject()
-                    {XCoordinate = packet.XCoordinate, YCoordinate = packet.YCoordinate, ZCoordinate = packet.ZCoordinate, NameOfObject = packet.NameOfObject }, DeliveryMethod.ReliableOrdered);
+                    {
+                        XCoordinate = packet.XCoordinate,
+                        YCoordinate = packet.YCoordinate,
+                        ZCoordinate = packet.ZCoordinate,
+                        onStand = packet.onStand
+                    }, DeliveryMethod.ReliableOrdered) ;
                 }
-            } 
+            }
         });
 
         Console.WriteLine("Server Started!");

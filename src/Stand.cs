@@ -26,8 +26,9 @@ public class Stand : MonoBehaviour
             float yrot = 0f;
             float zrot = 180f;
             wing.transform.eulerAngles = new Vector3(xrot, yrot, zrot);
+            GameObject.Find("moving_collision").GetComponent<Wing>().onStand = true;
+            //wing.GetComponent<detectedCollistion>() = false;
             wing.GetComponent<Rigidbody>().isKinematic = true;
-            wing.GetComponent<Rigidbody>().detectCollisions = false;
         }
     }
 

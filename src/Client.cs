@@ -42,10 +42,19 @@ public class Client : MonoBehaviour
 
         netListener.NetworkReceiveEvent += (server, reader, deliveryMethod) =>
         {
-            netPacketProcessor.Send(server, new PacketAboutObject()
+            if (!GameObject.Find("moving_collision").GetComponent<Wing>().onStand)
             {
-                XCoordinate = wing.transform.position.x, YCoordinate = wing.transform.position.y, ZCoordinate = wing.transform.position.z,
-                XRotation = wing.transform.rotation.x, YRotation = wing.transform.rotation.y, ZRotation = wing.transform.rotation.z, NameOfObject = "wing"}, DeliveryMethod.ReliableOrdered);
+                netPacketProcessor.Send(server, new PacketAboutObject()
+                {
+                    XCoordinate = wing.transform.position.x,
+                    YCoordinate = wing.transform.position.y,
+                    ZCoordinate = wing.transform.position.z,
+                    XRotation = wing.transform.rotation.x,
+                    YRotation = wing.transform.rotation.y,
+                    ZRotation = wing.transform.rotation.z,
+                    NameOfObject = "wing"
+                }, DeliveryMethod.ReliableOrdered);
+            }
             netPacketProcessor.ReadAllPackets(reader, server);
         };
 
@@ -55,7 +64,8 @@ public class Client : MonoBehaviour
             Vector3 vectorPosition = new Vector3(packet.XCoordinate, packet.YCoordinate, packet.ZCoordinate);
             Vector3 vectorRotation = new Vector3(packet.XRotation, packet.YRotation, packet.ZRotation);
             wing.transform.position = vectorPosition;
-            wing.transform.rotation = Quaternion.Euler(vectorRotation);
+            //wing.transform.rotation = Quaternion.Euler(vectorRotation);
+            ;
         });
 
         netManager = new NetManager(netListener);

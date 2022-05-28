@@ -6,6 +6,12 @@ public class PacketAboutObject
     public float XCoordinate { get; set; }
     public float YCoordinate { get; set; }
     public float ZCoordinate { get; set; }
+    public float FirstPlayerXCoordinate { get; set; }
+    public float FirstPlayerYCoordinate { get; set; }
+    public float FirstPlayerZCoordinate { get; set; }
+    public float SecondPlayerXCoordinate { get; set; }
+    public float SecondPlayerYCoordinate { get; set; }
+    public float SecondPlayerZCoordinate { get; set; }
     public bool onStand { get; set; }
 }
 
@@ -47,8 +53,14 @@ public static class Programm
                         XCoordinate = packet.XCoordinate,
                         YCoordinate = packet.YCoordinate,
                         ZCoordinate = packet.ZCoordinate,
+                        FirstPlayerXCoordinate = packet.FirstPlayerXCoordinate,
+                        FirstPlayerYCoordinate = packet.FirstPlayerYCoordinate,
+                        FirstPlayerZCoordinate = packet.FirstPlayerZCoordinate,
+                        SecondPlayerXCoordinate = packet.SecondPlayerXCoordinate,
+                        SecondPlayerYCoordinate = packet.SecondPlayerYCoordinate,
+                        SecondPlayerZCoordinate = packet.SecondPlayerZCoordinate,
                         onStand = packet.onStand
-                    }, DeliveryMethod.ReliableOrdered) ;
+                    }, DeliveryMethod.ReliableOrdered);
                 }
             }
         });

@@ -2,7 +2,7 @@
 
 ## Кейс: Мультиплеер XR
 ## Команда: VIRTUAL ROARING
-![Логотип]([MMSchool_MAI_2022/img/photo_2022-05-21_13-37-55.jpg](https://github.com/Berdikin/MMSchool_MAI_2022/blob/main/img/photo_2022-05-21_13-37-55.jpg))
+![Логотип](https://github.com/Berdikin/MMSchool_MAI_2022/blob/main/img/photo_2022-05-21_13-37-55.jpg)
 
 ## Состав команды
 Тимлид: Бердикин Тимофей  

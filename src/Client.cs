@@ -100,7 +100,7 @@ public class Client : MonoBehaviour
 
         netManager = new NetManager(netListener);
         netManager.Start();
-        netManager.Connect("10.10.75.10", 6431, "");
+        netManager.Connect("10.10.79.255", 6431, "");
     }
 
     void Update()

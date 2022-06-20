@@ -16,3 +16,4 @@
 Unity, C#, Blender, Dotnet-SDK, Android-SDK, Oculus Quest
 
 База знаний: ![ссылка](https://docs.google.com/document/d/1-nlvzS-FvCzF5lr1p7ujiO-eCYWqOBoKmkG0vmcTi7w/edit#)
+Инструкция по запуску: скоро будет!

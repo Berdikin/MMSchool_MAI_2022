@@ -1,4 +1,4 @@
-# MMSchool_MAI_2222
+# MMSchool_MAI_2022
 
 ## Кейс: Мультиплеер XR
 ## Команда: VIRTUAL ROARING
